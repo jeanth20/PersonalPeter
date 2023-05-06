@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" >
 <head>
-  <meta charset="UTF-8">
-  <title>Speech Recognition</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+	<meta charset="UTF-8">
+	<title>Emily</title>
+	<link rel="icon" href="{{ url_for('static', filename='start.png') }}" type="image/png">
+	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css">
 </head>
 <body>
 
@@ -12,45 +14,154 @@ find this code @ https://codepen.io/maaarj/pen/mjZbrW
 -->
 
 <div class="header">
-	<h1>Personal Assistant</h1>
-	<h3>Speech Recognition</h3>
-</div>
-
-<div class="me me-con">
-	<div id="start-recording">
-		<div class="me-body"></div>
-		<div class="me-ponytail"></div>
-		<div class="me-hair"></div>
-		<div class="me-head"></div>
-		<div class="me-bangs"></div>
-		<div class="me-face">
-			<div class="eyes"></div>
-			<div class="cheeks"></div>
-		</div>
+	<div  style="display: none;">
+		<button id="start-btn"><img src="{{ url_for('static', filename='start.png') }}" style="height: 80px; width: 80px;"></button>
+		<button id="stop-btn" disabled><img src="{{ url_for('static', filename='stop.png') }}" style="height: 80px; width: 80px;"></button>		
 	</div>
-</div>
-
-<div class="middle">
-	<button id="start-btn">Start Recording</button>
-	<button id="stop-btn" disabled>Stop Recording</button>
 	<div id="result"></div>
 	<div id="recording-indicator">Recording...</div>
-
 	<form id="audio-form" style="display: none;">
 		<input type="hidden" name="audio">
 	</form>
 </div>
 
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+	  <div class="modal-content" style="color: rgb(255, 255, 255); background-color: #020916;">
+		<div class="modal-header" style="color: rgb(255, 255, 255); background-color: #020916;">
+		  <h5 class="modal-title" id="exampleModalLabel">I am Emily an Online Assistant</h5>
+		  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		</div>
+		<div class="modal-body" style="color: rgb(255, 255, 255); background-color: #020916;">
+			<h6>How to make a request with Emily:</h6>
+			<p>
+				<a href="#"
+					role="button" 
+					class="btn btn-warning popover-test" 
+					title="Press the spacebar to start a recording" 
+					data-content="Popover body content is set in this attribute.">
+				Start
+				</a>
+				<a href="#"
+					role="button" 
+					class="btn btn-warning popover-test" 
+					title="Press the spacebar again to stop the recording" 
+					data-content="Popover body content is set in this attribute.">
+				Stop
+				</a>
+			</p>
+			<hr>
 
+			<h6>What requests Emily will be able to understand:</h6>
+			<p>A audio prompt that contains the following keyword will execute the related request</p>
+				<a href="#"
+				role="button" 
+				class="btn btn-warning popover-test" 
+				title="A greeting from Emily" 
+				data-content="Popover body content is set in this attribute.">
+				Hello
+				</a>
+				<hr>
+				<a href="#"
+				role="button" 
+				class="btn btn-warning popover-test" 
+				title="Read back the current time hh:mm:ss" 
+				data-content="Popover body content is set in this attribute.">
+				what is the time
+				</a>
+				<hr>
+				<a href="#"
+				role="button" 
+				class="btn btn-warning popover-test" 
+				title="Will open youtube in a new tab" 
+				data-content="Popover body content is set in this attribute.">
+				open youtube
+				</a>
+					<hr>
+				<a href="#"
+				role="button" 
+				class="btn btn-warning popover-test" 
+				title="Will open google in a new tab" 
+				data-content="Popover body content is set in this attribute.">
+				open google
+				</a>
+					<hr>
+				<a href="#"
+				role="button" 
+				class="btn btn-warning popover-test" 
+				title="Will open stackoverflow in a new tab" 
+				data-content="Popover body content is set in this attribute.">
+				open stackoverflow
+				</a>
+				<hr>
+				<a href="#"
+				role="button" 
+				class="btn btn-warning popover-test" 
+				title="Will search wikipedia for the topic included in request" 
+				data-content="Popover body content is set in this attribute.">
+				wikipedia
+				</a>
+					<hr>
+				<a href="#"
+				role="button" 
+				class="btn btn-warning popover-test" 
+				title="Will repeat back the request" 
+				data-content="Popover body content is set in this attribute.">
+				repeat
+				</a>
+					<hr>
+<!--
+			<h6>Popover in a modal</h6>
+			<p>This <a href="#" role="button" class="btn btn-warning popover-test" title="Popover title" 
+				data-content="Popover body content is set in this attribute.">
+				button</a> triggers a popover on click.</p>
+			<hr>
+
+
+			<h6>Tooltips in a modal</h6>
+			<p><a href="#" class="tooltip-test" title="Tooltip">This link</a> and <a href="#" class="tooltip-test" title="Tooltip">that link</a> have tooltips on hover.</p>
+-->		
+
+
+		</div>
+		<div class="modal-footer">
+		  <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+		</div>
+	  </div>
+	</div>
+</div>
+
+
+
+<div class="me me-con">
+	<button type="button" class="btn btn-primary speech-bubble" data-bs-toggle="modal" data-bs-target="#myModal">
+		Emily
+	</button>
+	<div class="me-body"></div>
+	<div class="me-ponytail"></div>
+	<div class="me-hair"></div>
+	<div class="me-head"></div>
+	<div class="me-bangs"></div>
+	<div class="me-face">
+		<div class="eyes"></div>
+		<div class="cheeks"></div>
+	</div>  
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 	let startBtn = document.getElementById('start-btn');
 	let stopBtn = document.getElementById('stop-btn');
 	let resultDiv = document.getElementById('result');
 	let indicatorDiv = document.getElementById('recording-indicator');
 	let mediaRecorder;
+	let isRecording = false;
 	let chunks = [];
 
-	startBtn.addEventListener('click', () => {
+	// Function to start the recording
+	function startRecording() {
 		navigator.mediaDevices.getUserMedia({ audio: true })
 			.then(stream => {
 				mediaRecorder = new MediaRecorder(stream);
@@ -88,16 +199,40 @@ find this code @ https://codepen.io/maaarj/pen/mjZbrW
 			.catch(error => {
 				console.error('Error accessing microphone:', error);
 			});
-	});
+	}
 
-	stopBtn.addEventListener('click', () => {
+	// Function to stop the recording
+	function stopRecording() {
 		mediaRecorder.stop();
 		startBtn.disabled = false;
 		stopBtn.disabled = true;
-		indicatorDiv.style.display = 'none';
+			indicatorDiv.style.display = 'none';
 		resultDiv.textContent = '';
+	}
+
+	function toggleRecording() {
+		if (isRecording) {
+			stopRecording();
+			isRecording = false;
+		} else {
+			startRecording();
+			isRecording = true;
+		}
+	}
+
+	document.addEventListener('keydown', event => {
+		// Check if the space bar is pressed
+		if (event.code === 'Space') {
+			toggleRecording();
+		}
+	});
+
+	startBtn.addEventListener('click', () => {
+		toggleRecording();
 	});
 </script>
+
+
 
 </body>
 </html>

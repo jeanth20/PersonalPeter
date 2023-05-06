@@ -4,18 +4,40 @@ html, body {
   background: #020916;
 }
 
+.speech-bubble {
+  position: relative;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 10px;
+  background-color: #007bff;
+  color: #fff;
+  font-weight: bold;
+}
+
+.speech-bubble:before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 10px 10px 0 10px;
+  border-color: #007bff transparent transparent transparent;
+}
+
 
 .header {
-  left: 45%;
   top: 45%;
   color: rgb(255, 255, 255);
+  background-color: #020916;
   text-align: center;
 }
 
 .middle {
-  left: 45%;
-  top: 45%;
-  color: rgb(255, 255, 255);
+
+  top: 65%;
   text-align: center;
 }
 
@@ -44,7 +66,7 @@ html, body {
   top: 45%;
   width: 120px;
   height: 120px;
-  background: #b72222;
+  background: #ff5f5f;
   transition: all 0.2s;
   -moz-border-radius: 60px;
   -webkit-border-radius: 60px;
