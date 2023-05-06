@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Speech Recognition</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 80%;
+            width: 400px;
+        }
+
+        #result {
+            margin-top: 20px;
+        }
+
+        #recording-indicator {
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Speech Recognition</h1>
+        <button id="start-btn">Start Recording</button>
+        <button id="stop-btn" disabled>Stop Recording</button>
+        <div id="result"></div>
+        <div id="recording-indicator">Recording...</div>
+
+        <form id="audio-form" style="display: none;">
+            <input type="hidden" name="audio">
+        </form>
+    </div>
+
+    <script>
+        let startBtn = document.getElementById('start-btn');
+        let stopBtn = document.getElementById('stop-btn');
+        let resultDiv = document.getElementById('result');
+        let indicatorDiv = document.getElementById('recording-indicator');
+        let mediaRecorder;
+        let chunks = [];
+    
+        startBtn.addEventListener('click', () => {
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    mediaRecorder = new MediaRecorder(stream);
+                    mediaRecorder.start();
+                    startBtn.disabled = true;
+                    stopBtn.disabled = false;
+                    indicatorDiv.style.display = 'block';
+                    resultDiv.textContent = 'Listening...';
+    
+                    mediaRecorder.addEventListener('dataavailable', event => {
+                        chunks.push(event.data);
+                    });
+    
+                    mediaRecorder.addEventListener('stop', () => {
+                        let blob = new Blob(chunks, { type: 'audio/webm' });
+                        let formData = new FormData();
+                        formData.append('audio', blob, 'audio.webm');
+    
+                        fetch('/process_audio', {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(response => response.text())
+                        .then(data => {
+                            // Handle the response data
+                            console.log(data);
+                        })
+                        .catch(error => {
+                            console.error('Error processing audio:', error);
+                        });
+    
+                        chunks = [];
+                    });
+                })
+                .catch(error => {
+                    console.error('Error accessing microphone:', error);
+                });
+        });
+    
+        stopBtn.addEventListener('click', () => {
+            mediaRecorder.stop();
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            indicatorDiv.style.display = 'none';
+            resultDiv.textContent = '';
+        });
+    </script>
+
+</body>
+</html>

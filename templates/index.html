@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Speech Recognition</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<!--
+find this code @ https://codepen.io/maaarj/pen/mjZbrW
+-->
+
+<div class="header">
+	<h1>Personal Assistant</h1>
+	<h3>Speech Recognition</h3>
+</div>
+
+<div class="me me-con">
+	<div id="start-recording">
+		<div class="me-body"></div>
+		<div class="me-ponytail"></div>
+		<div class="me-hair"></div>
+		<div class="me-head"></div>
+		<div class="me-bangs"></div>
+		<div class="me-face">
+			<div class="eyes"></div>
+			<div class="cheeks"></div>
+		</div>
+	</div>
+</div>
+
+<div class="middle">
+	<button id="start-btn">Start Recording</button>
+	<button id="stop-btn" disabled>Stop Recording</button>
+	<div id="result"></div>
+	<div id="recording-indicator">Recording...</div>
+
+	<form id="audio-form" style="display: none;">
+		<input type="hidden" name="audio">
+	</form>
+</div>
+
+
+<script>
+	let startBtn = document.getElementById('start-btn');
+	let stopBtn = document.getElementById('stop-btn');
+	let resultDiv = document.getElementById('result');
+	let indicatorDiv = document.getElementById('recording-indicator');
+	let mediaRecorder;
+	let chunks = [];
+
+	startBtn.addEventListener('click', () => {
+		navigator.mediaDevices.getUserMedia({ audio: true })
+			.then(stream => {
+				mediaRecorder = new MediaRecorder(stream);
+				mediaRecorder.start();
+				startBtn.disabled = true;
+				stopBtn.disabled = false;
+				indicatorDiv.style.display = 'block';
+				resultDiv.textContent = 'Listening...';
+
+				mediaRecorder.addEventListener('dataavailable', event => {
+					chunks.push(event.data);
+				});
+
+				mediaRecorder.addEventListener('stop', () => {
+					let blob = new Blob(chunks, { type: 'audio/webm' });
+					let formData = new FormData();
+					formData.append('audio', blob, 'audio.webm');
+
+					fetch('/process_audio', {
+						method: 'POST',
+						body: formData
+					})
+					.then(response => response.text())
+					.then(data => {
+						// Handle the response data
+						console.log(data);
+					})
+					.catch(error => {
+						console.error('Error processing audio:', error);
+					});
+
+					chunks = [];
+				});
+			})
+			.catch(error => {
+				console.error('Error accessing microphone:', error);
+			});
+	});
+
+	stopBtn.addEventListener('click', () => {
+		mediaRecorder.stop();
+		startBtn.disabled = false;
+		stopBtn.disabled = true;
+		indicatorDiv.style.display = 'none';
+		resultDiv.textContent = '';
+	});
+</script>
+
+</body>
+</html>
