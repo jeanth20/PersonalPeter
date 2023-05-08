@@ -123,7 +123,8 @@ def process_audio():
     audio.save('audio.webm')
 
     # Convert WebM audio file to WAV format
-    subprocess.run(['ffmpeg', '-i', 'audio.webm', 'audio.wav'], capture_output=True)
+    # subprocess.run(['ffmpeg', '-i', 'audio.webm', 'audio.wav'], capture_output=True)
+    subprocess.run(['ffmpeg', '-i', 'audio.webm', 'audio.wav'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     try:
         r = sr.Recognizer()
